@@ -1,0 +1,121 @@
+import 'package:general_pos/core/component/navbar/design_side_navbar.dart';
+import 'package:general_pos/core/extensions/build_context_ext.dart';
+import 'package:general_pos/core/component/navbar/design_bottom_navbar.dart';
+import 'package:general_pos/module/dashboard/widget/floating_action_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+class BottomNavBarItemData {
+  final BottomNavigationBarItem item;
+  final String destinationRoute;
+
+  BottomNavBarItemData({required this.item, required this.destinationRoute});
+}
+
+class DashboardPage extends StatefulWidget {
+  const DashboardPage({super.key, required this.state, required this.child});
+
+  final StatefulNavigationShell child;
+  final GoRouterState state;
+
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  List<BottomNavBarItemData> get bottomNavBarItems => [
+    BottomNavBarItemData(
+      destinationRoute: "/home",
+      item: BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        activeIcon: Icon(
+          Icons.home,
+          color: context.colorScheme.primary,
+        ),
+        label: "Home",
+      ),
+    ),
+    BottomNavBarItemData(
+      destinationRoute: "/event",
+      item: BottomNavigationBarItem(
+        icon: Icon(Icons.calendar_month),
+        activeIcon: Icon(
+          Icons.calendar_month,
+          color: context.colorScheme.primary,
+        ),
+        label: "Event",
+      ),
+    ),
+    BottomNavBarItemData(
+      destinationRoute: "/sponsor",
+      item: BottomNavigationBarItem(
+        icon: Icon(Icons.campaign),
+        activeIcon: Icon(
+          Icons.campaign,
+          color: context.colorScheme.primary,
+        ),
+        label: "Sponsor",
+      ),
+    ),
+    BottomNavBarItemData(
+      destinationRoute: "/profile",
+      item: BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        activeIcon: Icon(
+          Icons.person,
+          color: context.colorScheme.primary,
+        ),
+        label: "Profile",
+      ),
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          if (!context.isMobileSize)
+            DesignSideNavbar(
+              currentIndex: widget.child.currentIndex,
+              onTap: onItemClicked,
+              bottomNavBarItems: bottomNavBarItems.map((e) => e.item).toList(),
+              additionalWidget: [
+                FloatingActionWidget(),
+              ],
+            ),
+          Flexible(child: widget.child),
+        ],
+      ),
+      floatingActionButton: _buildFloatingActionButton(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: _buildBottomNavigation(context),
+    );
+  }
+
+  Widget? _buildFloatingActionButton(BuildContext context) {
+    if (!context.isMobileSize) return null;
+
+    return MediaQuery.of(context).viewInsets.bottom > 0
+        ? const SizedBox.shrink()
+        : FloatingActionWidget();
+  }
+
+  Widget? _buildBottomNavigation(BuildContext context) {
+    if (!context.isMobileSize) return null;
+
+    return DesignBottomNavbar(
+      currentIndex: widget.child.currentIndex,
+      onTap: onItemClicked,
+      bottomNavBarItems: bottomNavBarItems.map((e) => e.item).toList(),
+      fabLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+
+  void onItemClicked(int index) {
+    widget.child.goBranch(
+      index,
+      initialLocation: index == widget.child.currentIndex,
+    );
+  }
+}
