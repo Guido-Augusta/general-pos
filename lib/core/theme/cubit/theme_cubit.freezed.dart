@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'theme_cubit.dart';
@@ -9,6 +9,7 @@ part of 'theme_cubit.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ThemeStateCopyWith<ThemeState> get copyWith => _$ThemeStateCopyWithImpl<ThemeSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ThemeState&&(identical(other.current, current) || other.current == current));
+  final _this = this as ThemeState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ThemeState&&(identical(other.current, _this.current) || other.current == _this.current));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,current);
+int get hashCode {
+  final _this = this as ThemeState;
+  return Object.hash(runtimeType,_this.current);
+}
 
 @override
 String toString() {
-  return 'ThemeState(current: $current)';
+  final _this = this as ThemeState;
+  return 'ThemeState(current: ${_this.current})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ThemeStateCopyWithImpl<$Res>
 /// Create a copy of ThemeState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? current = null,}) {
-  return _then(_self.copyWith(
+  return _then(ThemeState(
 current: null == current ? _self.current : current // ignore: cast_nullable_to_non_nullable
 as ThemeMode,
   ));
@@ -221,16 +227,18 @@ _$ThemeStateCopyWith<_ThemeState> get copyWith => __$ThemeStateCopyWithImpl<_The
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ThemeState&&(identical(other.current, current) || other.current == current));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ThemeState&&(identical(other.current, current) || other.current == current));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,current);
+int get hashCode {
+    return Object.hash(runtimeType,current);
+}
 
 @override
 String toString() {
-  return 'ThemeState(current: $current)';
+    return 'ThemeState(current: $current)';
 }
 
 
