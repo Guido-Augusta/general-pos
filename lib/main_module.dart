@@ -1,4 +1,5 @@
 import 'package:general_pos/core/env/env.dart';
+import 'package:general_pos/core/local_database/local_database.dart';
 import 'package:general_pos/core/local_storage/local_storage.dart';
 import 'package:general_pos/core/local_storage/local_storage_secure.dart';
 import 'package:general_pos/core/network/http_client.dart';
@@ -20,6 +21,9 @@ class MainModule {
 
     // local storage
     di.registerSingleton<LocalStorage>(LocalStorageSecure()..init());
+
+    // local database
+    di.registerSingleton<LocalDatabase>(LocalDatabase());
 
     // app event
     di.registerSingleton(AppEventBroadcaster());
