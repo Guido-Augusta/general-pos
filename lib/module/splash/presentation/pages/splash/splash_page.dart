@@ -29,8 +29,8 @@ class _SplashUIState extends State<SplashUI> {
 
   void initialize() async {
     // checking if login/not/anything
-    await Future.delayed(const Duration(seconds: 2));
     if (!kIsWeb) FlutterNativeSplash.remove();
+    await Future.delayed(const Duration(seconds: 2));
 
     if (mounted) {
       context.goNamed(AppRouteName.login);
@@ -40,6 +40,6 @@ class _SplashUIState extends State<SplashUI> {
   @override
   Widget build(BuildContext context) {
     // can be blank screen, it's only purpose is as initialization/redirection page
-    return const Scaffold();
+    return const Scaffold(body: Center(child: Text('Splash')));
   }
 }
