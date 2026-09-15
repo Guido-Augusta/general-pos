@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:general_pos/core/route/app_route_redirect.dart';
 import 'package:general_pos/core/route/app_route_name.dart';
 import 'package:general_pos/module/auth/presentation/pages/login/login_page.dart';
-import 'package:general_pos/module/auth/presentation/pages/register/register_page.dart';
 import 'package:general_pos/module/dashboard/dashboard_page.dart';
 import 'package:general_pos/module/event/presentation/pages/event/event_page.dart';
 import 'package:general_pos/module/home/presentation/pages/home/home_page.dart';
@@ -38,28 +37,12 @@ class AppRoute {
         },
       ),
       GoRoute(
-        path: "/onboarding",
-        name: AppRouteName.onBoarding,
-        builder: (context, state) {
-          return SizedBox();
-        },
-      ),
-      GoRoute(
         path: "/auth",
         name: AppRouteName.login,
         redirect: AppRouteRedirect.needNoAuth,
         builder: (context, state) {
           return LoginPage();
         },
-        routes: [
-          GoRoute(
-            path: "register",
-            name: AppRouteName.register,
-            builder: (context, state) {
-              return RegisterPage();
-            },
-          ),
-        ],
       ),
       StatefulShellRoute.indexedStack(
         key: bottomNavigatorKey,

@@ -30,3 +30,18 @@ class UnAuthorizedFailure extends Failure {
   @override
   List<Object?> get props => [message];
 }
+
+class UserNotFoundFailure extends Failure {
+  @override
+  List<Object?> get props => [];
+}
+
+class UserInactiveFailure extends Failure {
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
+class WrongPasswordFailure extends Failure {
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
