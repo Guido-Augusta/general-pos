@@ -11,7 +11,9 @@ class AppRouteName {
 
   // dashboard
   static String home = "home";
-  static String event = "event";
-  static String sponsor = "sponsor";
-  static String profile = "profile";
+  static String orders = "orders";
+  static String transaction = "transaction";
+  static String store = "store";
+  static String users = "users";
+  static String setting = "setting";
 }
