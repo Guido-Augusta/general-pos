@@ -1,114 +1,205 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:general_pos/core/component/image/design_image.dart';
 import 'package:general_pos/core/component/navbar/design_side_navbar.dart';
+import 'package:general_pos/core/constant/user/user_role.dart';
 import 'package:general_pos/core/extensions/build_context_ext.dart';
-import 'package:general_pos/core/component/navbar/design_bottom_navbar.dart';
-import 'package:general_pos/module/dashboard/widget/floating_action_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:general_pos/core/route/app_route_name.dart';
+import 'package:general_pos/core/utils/app_utils.dart';
+import 'package:general_pos/module/dashboard/cubit/dashboard_cubit.dart';
 import 'package:go_router/go_router.dart';
 
 class BottomNavBarItemData {
-  final BottomNavigationBarItem item;
+  final int destinationIndex;
   final String destinationRoute;
+  final List<UserRole> roleAccess;
+  final BottomNavigationBarItem item;
 
-  BottomNavBarItemData({required this.item, required this.destinationRoute});
+  BottomNavBarItemData({
+    required this.destinationIndex,
+    required this.destinationRoute,
+    this.roleAccess = const [],
+    required this.item,
+  });
 }
 
-class DashboardPage extends StatefulWidget {
+class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key, required this.state, required this.child});
+
+  final GoRouterState state;
+  final StatefulNavigationShell child;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => DashboardCubit(di(), di())..getLoginSession(),
+      child: DashboardUI(state: state, child: child),
+    );
+  }
+}
+
+class DashboardUI extends StatefulWidget {
+  const DashboardUI({super.key, required this.state, required this.child});
 
   final StatefulNavigationShell child;
   final GoRouterState state;
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  State<DashboardUI> createState() => _DashboardUIState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _DashboardUIState extends State<DashboardUI> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  BottomNavigationBarItem _buildBottomNavigationBar(
+    String inactiveIcon,
+    String activeIcon,
+    String label,
+  ) {
+    return BottomNavigationBarItem(
+      icon: DesignImage(
+        SvgAssets(inactiveIcon, color: context.colorScheme.inverseSurface),
+        width: 24,
+        height: 24,
+      ),
+      activeIcon: DesignImage(
+        SvgAssets(activeIcon, color: context.colorScheme.primary),
+        width: 24,
+        height: 24,
+      ),
+      label: label,
+    );
+  }
+
   List<BottomNavBarItemData> get bottomNavBarItems => [
     BottomNavBarItemData(
+      destinationIndex: 0,
       destinationRoute: "/home",
-      item: BottomNavigationBarItem(
-        icon: Icon(Icons.home),
-        activeIcon: Icon(
-          Icons.home,
-          color: context.colorScheme.primary,
-        ),
-        label: "Home",
+      roleAccess: [UserRole.admin, UserRole.employee],
+      item: _buildBottomNavigationBar(
+        "assets/icon/ic_dashboard.svg",
+        "assets/icon/ic_dashboard_active.svg",
+        context.intl.product_dashboard,
       ),
     ),
     BottomNavBarItemData(
-      destinationRoute: "/event",
-      item: BottomNavigationBarItem(
-        icon: Icon(Icons.calendar_month),
-        activeIcon: Icon(
-          Icons.calendar_month,
-          color: context.colorScheme.primary,
-        ),
-        label: "Event",
+      destinationIndex: 1,
+      destinationRoute: "/orders",
+      roleAccess: [UserRole.admin, UserRole.employee],
+      item: _buildBottomNavigationBar(
+        "assets/icon/ic_shopping.svg",
+        "assets/icon/ic_shopping_active.svg",
+        context.intl.product_orders,
       ),
     ),
     BottomNavBarItemData(
-      destinationRoute: "/sponsor",
-      item: BottomNavigationBarItem(
-        icon: Icon(Icons.campaign),
-        activeIcon: Icon(
-          Icons.campaign,
-          color: context.colorScheme.primary,
-        ),
-        label: "Sponsor",
+      destinationIndex: 2,
+      destinationRoute: "/transaction",
+      roleAccess: [UserRole.admin],
+      item: _buildBottomNavigationBar(
+        "assets/icon/ic_transaction.svg",
+        "assets/icon/ic_transaction_active.svg",
+        context.intl.product_transaction,
       ),
     ),
     BottomNavBarItemData(
-      destinationRoute: "/profile",
-      item: BottomNavigationBarItem(
-        icon: Icon(Icons.person),
-        activeIcon: Icon(
-          Icons.person,
-          color: context.colorScheme.primary,
-        ),
-        label: "Profile",
+      destinationIndex: 3,
+      destinationRoute: "/store",
+      roleAccess: [UserRole.admin],
+      item: _buildBottomNavigationBar(
+        "assets/icon/ic_store.svg",
+        "assets/icon/ic_store_active.svg",
+        context.intl.product_store,
+      ),
+    ),
+    BottomNavBarItemData(
+      destinationIndex: 4,
+      destinationRoute: "/users",
+      roleAccess: [UserRole.admin, UserRole.employee],
+      item: _buildBottomNavigationBar(
+        "assets/icon/ic_users.svg",
+        "assets/icon/ic_users_active.svg",
+        context.intl.product_users,
+      ),
+    ),
+    BottomNavBarItemData(
+      destinationIndex: 5,
+      destinationRoute: "/setting",
+      roleAccess: [UserRole.admin, UserRole.employee],
+      item: _buildBottomNavigationBar(
+        "assets/icon/ic_setting.svg",
+        "assets/icon/ic_setting_active.svg",
+        context.intl.product_setting,
       ),
     ),
   ];
 
+  // check for root route
+  // /home => true
+  // /home/detail => false
+  bool get rootRoute {
+    return widget.state.uri.pathSegments.length == 1;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      appBar: context.responsiveValue(
+        desktop: null,
+        tablet: null,
+        mobile: rootRoute
+            ? AppBar(
+                leading: IconButton(
+                  onPressed: () {
+                    _scaffoldKey.currentState?.openDrawer();
+                  },
+                  icon: Icon(Icons.menu_rounded),
+                ),
+                title: Text(
+                  bottomNavBarItems[widget.child.currentIndex].item.label ?? "",
+                ),
+              )
+            : null,
+      ),
+      drawer: context.responsiveValue(
+        desktop: null,
+        tablet: null,
+        mobile: BlocBuilder<DashboardCubit, DashboardState>(
+          builder: (context, state) {
+            return SizedBox(
+              width: context.screenWidth * 0.6,
+              child: DesignSideNavbar(
+                role: state.user?.role,
+                username: state.user?.username ?? "-",
+                currentIndex: widget.child.currentIndex,
+                bottomNavbar: bottomNavBarItems,
+                onTap: onItemClicked,
+                onLogout: onLogout,
+              ),
+            );
+          },
+        ),
+      ),
+      resizeToAvoidBottomInset: false,
       body: Row(
         children: [
           if (!context.isMobileSize)
-            DesignSideNavbar(
-              currentIndex: widget.child.currentIndex,
-              onTap: onItemClicked,
-              bottomNavBarItems: bottomNavBarItems.map((e) => e.item).toList(),
-              additionalWidget: [
-                FloatingActionWidget(),
-              ],
+            BlocBuilder<DashboardCubit, DashboardState>(
+              builder: (context, state) {
+                return DesignSideNavbar(
+                  role: state.user?.role,
+                  username: state.user?.username ?? "-",
+                  currentIndex: widget.child.currentIndex,
+                  bottomNavbar: bottomNavBarItems,
+                  onTap: onItemClicked,
+                  onLogout: onLogout,
+                );
+              },
             ),
           Flexible(child: widget.child),
         ],
       ),
-      floatingActionButton: _buildFloatingActionButton(context),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: _buildBottomNavigation(context),
-    );
-  }
-
-  Widget? _buildFloatingActionButton(BuildContext context) {
-    if (!context.isMobileSize) return null;
-
-    return MediaQuery.of(context).viewInsets.bottom > 0
-        ? const SizedBox.shrink()
-        : FloatingActionWidget();
-  }
-
-  Widget? _buildBottomNavigation(BuildContext context) {
-    if (!context.isMobileSize) return null;
-
-    return DesignBottomNavbar(
-      currentIndex: widget.child.currentIndex,
-      onTap: onItemClicked,
-      bottomNavBarItems: bottomNavBarItems.map((e) => e.item).toList(),
-      fabLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -117,5 +208,12 @@ class _DashboardPageState extends State<DashboardPage> {
       index,
       initialLocation: index == widget.child.currentIndex,
     );
+  }
+
+  void onLogout() async {
+    await context.read<DashboardCubit>().logout();
+    if (!mounted) return;
+
+    context.goNamed(AppRouteName.login);
   }
 }

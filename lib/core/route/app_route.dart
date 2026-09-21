@@ -4,13 +4,15 @@ import 'package:general_pos/core/route/app_route_redirect.dart';
 import 'package:general_pos/core/route/app_route_name.dart';
 import 'package:general_pos/module/auth/presentation/pages/login/login_page.dart';
 import 'package:general_pos/module/dashboard/dashboard_page.dart';
-import 'package:general_pos/module/event/presentation/pages/event/event_page.dart';
 import 'package:general_pos/module/home/presentation/pages/home/home_page.dart';
-import 'package:general_pos/module/profile/presentation/pages/profile/profile_page.dart';
+import 'package:general_pos/module/setting/presentation/pages/setting/setting_page.dart';
 import 'package:general_pos/module/splash/presentation/pages/splash/splash_page.dart';
-import 'package:general_pos/module/sponsor/presentation/pages/sponsor/sponsor_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:general_pos/module/store/presentation/pages/store/store_page.dart';
+import 'package:general_pos/module/transaction/presentation/pages/orders/orders_page.dart';
+import 'package:general_pos/module/transaction/presentation/pages/transaction/transaction_page.dart';
+import 'package:general_pos/module/users/presentation/pages/users/users_page.dart';
 import 'package:go_router/go_router.dart';
 
 final Completer<void> rootNavigatorCompleter = Completer<void>();
@@ -64,10 +66,10 @@ class AppRoute {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: "/event",
-                name: AppRouteName.event,
+                path: "/orders",
+                name: AppRouteName.orders,
                 builder: (context, state) {
-                  return EventPage();
+                  return OrdersPage();
                 },
               ),
             ],
@@ -75,10 +77,10 @@ class AppRoute {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: "/sponsor",
-                name: AppRouteName.sponsor,
+                path: "/transaction",
+                name: AppRouteName.transaction,
                 builder: (context, state) {
-                  return SponsorPage();
+                  return TransactionPage();
                 },
               ),
             ],
@@ -86,11 +88,35 @@ class AppRoute {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: "/profile",
-                name: AppRouteName.profile,
+                path: "/store",
+                name: AppRouteName.store,
                 redirect: AppRouteRedirect.needAuth,
                 builder: (context, state) {
-                  return ProfilePage();
+                  return StorePage();
+                },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: "/users",
+                name: AppRouteName.users,
+                redirect: AppRouteRedirect.needAuth,
+                builder: (context, state) {
+                  return UsersPage();
+                },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: "/setting",
+                name: AppRouteName.setting,
+                redirect: AppRouteRedirect.needAuth,
+                builder: (context, state) {
+                  return SettingPage();
                 },
               ),
             ],
