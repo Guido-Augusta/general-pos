@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
                         duration: const Duration(milliseconds: 1500),
                       ),
                       Brightness.dark => ShimmerEffect.dark(
-                        baseColor: AppColor.danger[700]!,
+                        baseColor: AppColor.neutral[700]!,
                         highlightColor: AppColor.white,
                         duration: const Duration(milliseconds: 1500),
                       ),
